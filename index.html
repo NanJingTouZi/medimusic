@@ -50,7 +50,6 @@
             font-weight: 300;
         }
 
-        /* ---- PLAYER ---- */
         .player-card {
             background: rgba(255, 255, 255, 0.07);
             border-radius: 18px;
@@ -86,7 +85,6 @@
             border-radius: 40px;
         }
 
-        /* ---- CONTROL BUTTONS ---- */
         .controls {
             display: flex;
             justify-content: center;
@@ -131,7 +129,6 @@
             font-size: 1.1rem;
         }
 
-        /* ---- PLAYLIST ---- */
         .playlist-header {
             display: flex;
             justify-content: space-between;
@@ -254,7 +251,6 @@
             color: #a29bfe;
         }
 
-        /* ---- FOOTER ---- */
         .footer-info {
             margin-top: 18px;
             padding: 12px 14px;
@@ -271,7 +267,6 @@
             margin: 0 6px;
         }
 
-        /* ---- RESPONSIVE ---- */
         @media (max-width: 500px) {
             .container {
                 padding: 18px 14px;
@@ -299,7 +294,6 @@
     <h1>🎵 Relaksasi</h1>
     <p class="subtitle">14 lagu untuk menenangkan pikiran</p>
 
-    <!-- PLAYER -->
     <div class="player-card">
         <div class="now-playing" id="nowPlaying">🎧 <strong>Pilih lagu dari playlist</strong></div>
         <audio id="audioPlayer" controls preload="metadata">
@@ -315,7 +309,6 @@
         </div>
     </div>
 
-    <!-- PLAYLIST -->
     <div class="playlist-header">
         <h3>📋 Daftar Putar</h3>
         <span class="count" id="playlistCount">14 lagu</span>
@@ -335,83 +328,83 @@
 
 <script>
     // ============================================================
-    //  DATA MUSIK — semua file dari folder /music/
+    //  DATA MUSIK — URL dengan nama file baru (tanpa durasi)
     // ============================================================
     const musicData = [
         {
             id: 1,
-            title: 'Rileksasi 1 (02.45)',
-            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-1%20(02.45).mp3'
+            title: 'Rileksasi 1',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-1.mp3'
         },
         {
             id: 2,
-            title: 'Rileksasi 2 (02.45)',
-            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-2%20(02.45).mp3'
+            title: 'Rileksasi 2',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-2.mp3'
         },
         {
             id: 3,
-            title: 'Rileksasi 3 (02.45)',
-            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-3%20(02.45).mp3'
+            title: 'Rileksasi 3',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-3.mp3'
         },
         {
             id: 4,
-            title: 'Rileksassi 4 (02.08)',
-            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksassi-4%20(02.08).mp3'
+            title: 'Rileksasi 4',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-4.mp3'
         },
         {
             id: 5,
-            title: 'Rileksassi 5 (02.09)',
-            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksassi-5%20(02.09).mp3'
+            title: 'Rileksasi 5',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-5.mp3'
         },
         {
             id: 6,
-            title: 'Rileksassi 6 (02.57)',
-            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksassi-6%20(02.57).mp3'
+            title: 'Rileksasi 6',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-6.mp3'
         },
         {
             id: 7,
-            title: 'Rileksassi 7 (02.34)',
-            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksassi-7%20(02.34).mp3'
+            title: 'Rileksasi 7',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-7.mp3'
         },
         {
             id: 8,
-            title: 'Rileksassi 8 (02.08)',
-            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksassi-8%20(02.08).mp3'
+            title: 'Rileksasi 8',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-8.mp3'
         },
         {
             id: 9,
-            title: 'Rileksassi 9 (02.08)',
-            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksassi-9%20(02.08).mp3'
+            title: 'Rileksasi 9',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-9.mp3'
         },
         {
             id: 10,
-            title: 'Rileksasi 10 (02.50)',
-            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-10%20(02.50).mp3'
+            title: 'Rileksasi 10',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-10.mp3'
         },
         {
             id: 11,
-            title: 'Rileksasi 11 (02.45)',
-            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-11%20(02.45).mp3'
+            title: 'Rileksasi 11',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-11.mp3'
         },
         {
             id: 12,
-            title: 'Rileksasi 12 (02.50)',
-            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-12%20(02.50).mp3'
+            title: 'Rileksasi 12',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-12.mp3'
         },
         {
             id: 13,
-            title: 'Rileksasi 13 (02.04)',
-            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-13%20(02.04).mp3'
+            title: 'Rileksasi 13',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-13.mp3'
         },
         {
             id: 14,
-            title: 'Rileksasi 14 (02.02)',
-            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-14%20(02.02).mp3'
+            title: 'Rileksasi 14',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-14.mp3'
         }
     ];
 
     // ============================================================
-    //  STATE
+    //  STATE & FUNGSI (TIDAK BERUBAH)
     // ============================================================
     let playlist = [];
     let currentIndex = 0;
@@ -430,9 +423,6 @@
     const shuffleBtn = document.getElementById('shuffleBtn');
     const repeatBtn = document.getElementById('repeatBtn');
 
-    // ============================================================
-    //  FUNGSI
-    // ============================================================
     function loadPlaylist() {
         playlist = musicData.map((m, i) => ({
             ...m,
@@ -473,7 +463,6 @@
         });
         listEl.innerHTML = html;
 
-        // event klik
         document.querySelectorAll('.music-item').forEach(el => {
             el.addEventListener('click', function () {
                 const idx = parseInt(this.dataset.index);
@@ -579,7 +568,6 @@
 
     audio.addEventListener('error', () => {
         console.warn('Gagal memuat:', playlist[currentIndex]?.title);
-        // tidak tampilkan alert agar tidak mengganggu user
     });
 
     // ============================================================
