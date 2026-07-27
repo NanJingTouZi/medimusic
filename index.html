@@ -1,1 +1,642 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Musik Relaksasi - Playlist</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 28px 24px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        h1 {
+            text-align: center;
+            color: #fff;
+            font-weight: 600;
+            font-size: 1.9rem;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+            font-weight: 300;
+        }
+
+        /* ---- PLAYER ---- */
+        .player-card {
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 18px;
+            padding: 20px 18px 18px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .now-playing {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            text-align: center;
+            margin-bottom: 12px;
+            min-height: 26px;
+            font-weight: 300;
+        }
+
+        .now-playing strong {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        audio {
+            width: 100%;
+            border-radius: 40px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.05);
+            height: 40px;
+        }
+
+        audio::-webkit-media-controls-panel {
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 40px;
+        }
+
+        /* ---- CONTROL BUTTONS ---- */
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .controls button {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(4px);
+            font-weight: 400;
+        }
+
+        .controls button:hover {
+            background: rgba(255, 255, 255, 0.16);
+            transform: scale(1.02);
+        }
+
+        .controls button:active {
+            transform: scale(0.96);
+        }
+
+        .controls button.active-mode {
+            background: #6c5ce7;
+            border-color: #a29bfe;
+            box-shadow: 0 0 18px rgba(108, 92, 231, 0.35);
+        }
+
+        .btn-icon {
+            font-size: 1.1rem;
+        }
+
+        /* ---- PLAYLIST ---- */
+        .playlist-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .playlist-header h3 {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 400;
+            font-size: 1rem;
+            letter-spacing: 0.3px;
+        }
+
+        .playlist-header .count {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.75rem;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 2px 14px;
+            border-radius: 30px;
+        }
+
+        .music-list {
+            list-style: none;
+            max-height: 380px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .music-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .music-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+        }
+
+        .music-list::-webkit-scrollbar-thumb {
+            background: #6c5ce7;
+            border-radius: 10px;
+        }
+
+        .music-item {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 12px 16px;
+            margin-bottom: 6px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .music-item:hover {
+            background: rgba(255, 255, 255, 0.09);
+            transform: translateX(4px);
+        }
+
+        .music-item.active {
+            background: rgba(108, 92, 231, 0.25);
+            border-left-color: #a29bfe;
+        }
+
+        .music-item.active .music-title {
+            color: #fff;
+        }
+
+        .music-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .music-number {
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 0.7rem;
+            font-weight: 600;
+            width: 22px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .music-item.active .music-number {
+            color: #a29bfe;
+        }
+
+        .music-title {
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 0.88rem;
+            font-weight: 400;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .music-duration {
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 0.7rem;
+            flex-shrink: 0;
+            margin-left: 8px;
+        }
+
+        .play-indicator {
+            font-size: 0.75rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            flex-shrink: 0;
+            margin-left: 8px;
+        }
+
+        .music-item.active .play-indicator {
+            opacity: 1;
+            color: #a29bfe;
+        }
+
+        /* ---- FOOTER ---- */
+        .footer-info {
+            margin-top: 18px;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            text-align: center;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.7rem;
+            font-weight: 300;
+        }
+
+        .footer-info span {
+            margin: 0 6px;
+        }
+
+        /* ---- RESPONSIVE ---- */
+        @media (max-width: 500px) {
+            .container {
+                padding: 18px 14px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            .controls button {
+                padding: 6px 12px;
+                font-size: 0.75rem;
+            }
+            .music-item {
+                padding: 10px 12px;
+            }
+            .music-title {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>🎵 Relaksasi</h1>
+    <p class="subtitle">14 lagu untuk menenangkan pikiran</p>
+
+    <!-- PLAYER -->
+    <div class="player-card">
+        <div class="now-playing" id="nowPlaying">🎧 <strong>Pilih lagu dari playlist</strong></div>
+        <audio id="audioPlayer" controls preload="metadata">
+            <source id="audioSource" src="" type="audio/mpeg" />
+            Browser Anda tidak mendukung audio.
+        </audio>
+
+        <div class="controls">
+            <button id="prevBtn" title="Sebelumnya"><span class="btn-icon">⏮</span> Prev</button>
+            <button id="shuffleBtn" title="Acak"><span class="btn-icon">🔀</span> Shuffle</button>
+            <button id="repeatBtn" title="Ulangi"><span class="btn-icon">🔁</span> Repeat</button>
+            <button id="nextBtn" title="Selanjutnya"><span class="btn-icon">⏭</span> Next</button>
+        </div>
+    </div>
+
+    <!-- PLAYLIST -->
+    <div class="playlist-header">
+        <h3>📋 Daftar Putar</h3>
+        <span class="count" id="playlistCount">14 lagu</span>
+    </div>
+
+    <ul class="music-list" id="musicList"></ul>
+
+    <div class="footer-info">
+        <span>💡 Klik lagu untuk memutar</span>
+        <span>·</span>
+        <span>⌨️ Space = play/pause</span>
+        <span>·</span>
+        <span>← → = navigasi</span>
+    </div>
+
+</div>
+
+<script>
+    // ============================================================
+    //  DATA MUSIK — semua file dari folder /music/
+    // ============================================================
+    const musicData = [
+        {
+            id: 1,
+            title: 'Rileksasi 1 (02.45)',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-1%20(02.45).mp3'
+        },
+        {
+            id: 2,
+            title: 'Rileksasi 2 (02.45)',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-2%20(02.45).mp3'
+        },
+        {
+            id: 3,
+            title: 'Rileksasi 3 (02.45)',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-3%20(02.45).mp3'
+        },
+        {
+            id: 4,
+            title: 'Rileksassi 4 (02.08)',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksassi-4%20(02.08).mp3'
+        },
+        {
+            id: 5,
+            title: 'Rileksassi 5 (02.09)',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksassi-5%20(02.09).mp3'
+        },
+        {
+            id: 6,
+            title: 'Rileksassi 6 (02.57)',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksassi-6%20(02.57).mp3'
+        },
+        {
+            id: 7,
+            title: 'Rileksassi 7 (02.34)',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksassi-7%20(02.34).mp3'
+        },
+        {
+            id: 8,
+            title: 'Rileksassi 8 (02.08)',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksassi-8%20(02.08).mp3'
+        },
+        {
+            id: 9,
+            title: 'Rileksassi 9 (02.08)',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksassi-9%20(02.08).mp3'
+        },
+        {
+            id: 10,
+            title: 'Rileksasi 10 (02.50)',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-10%20(02.50).mp3'
+        },
+        {
+            id: 11,
+            title: 'Rileksasi 11 (02.45)',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-11%20(02.45).mp3'
+        },
+        {
+            id: 12,
+            title: 'Rileksasi 12 (02.50)',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-12%20(02.50).mp3'
+        },
+        {
+            id: 13,
+            title: 'Rileksasi 13 (02.04)',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-13%20(02.04).mp3'
+        },
+        {
+            id: 14,
+            title: 'Rileksasi 14 (02.02)',
+            file: 'https://raw.githubusercontent.com/NanJingTouZi/medimusic/main/music/Rileksasi-14%20(02.02).mp3'
+        }
+    ];
+
+    // ============================================================
+    //  STATE
+    // ============================================================
+    let playlist = [];
+    let currentIndex = 0;
+    let isShuffle = false;
+    let isRepeat = false;
+    let isPlaying = false;
+
+    const audio = document.getElementById('audioPlayer');
+    const audioSource = document.getElementById('audioSource');
+    const listEl = document.getElementById('musicList');
+    const nowEl = document.getElementById('nowPlaying');
+    const countEl = document.getElementById('playlistCount');
+
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const shuffleBtn = document.getElementById('shuffleBtn');
+    const repeatBtn = document.getElementById('repeatBtn');
+
+    // ============================================================
+    //  FUNGSI
+    // ============================================================
+    function loadPlaylist() {
+        playlist = musicData.map((m, i) => ({
+            ...m,
+            index: i,
+            duration: '0:00'
+        }));
+        countEl.textContent = playlist.length + ' lagu';
+        render();
+    }
+
+    function formatDuration(sec) {
+        if (!sec || isNaN(sec)) return '0:00';
+        const m = Math.floor(sec / 60);
+        const s = Math.floor(sec % 60);
+        return m + ':' + String(s).padStart(2, '0');
+    }
+
+    function render() {
+        if (!playlist.length) {
+            listEl.innerHTML = '<li style="color:rgba(255,255,255,0.3);text-align:center;padding:30px;">Belum ada musik</li>';
+            return;
+        }
+
+        let html = '';
+        playlist.forEach((music, idx) => {
+            const active = (idx === currentIndex && isPlaying) ? 'active' : '';
+            const indicator = (idx === currentIndex && isPlaying) ? '▶️' : '';
+            html += `
+                <li class="music-item ${active}" data-index="${idx}">
+                    <div class="music-info">
+                        <span class="music-number">${idx + 1}</span>
+                        <span class="music-title">${music.title}</span>
+                        <span class="music-duration">${music.duration}</span>
+                    </div>
+                    <span class="play-indicator">${indicator}</span>
+                </li>
+            `;
+        });
+        listEl.innerHTML = html;
+
+        // event klik
+        document.querySelectorAll('.music-item').forEach(el => {
+            el.addEventListener('click', function () {
+                const idx = parseInt(this.dataset.index);
+                playIndex(idx);
+            });
+        });
+    }
+
+    function playIndex(index) {
+        if (index < 0 || index >= playlist.length) return;
+        currentIndex = index;
+        const music = playlist[currentIndex];
+        audioSource.src = music.file;
+        audio.load();
+        audio.play()
+            .then(() => {
+                isPlaying = true;
+                updateNowPlaying();
+                render();
+            })
+            .catch(() => {
+                isPlaying = false;
+                updateNowPlaying();
+                render();
+            });
+    }
+
+    function updateNowPlaying() {
+        const music = playlist[currentIndex];
+        if (music && isPlaying) {
+            nowEl.innerHTML = '🎧 <strong>' + music.title + '</strong>';
+        } else if (music) {
+            nowEl.innerHTML = '⏸️ <strong>' + music.title + '</strong> (dijeda)';
+        } else {
+            nowEl.innerHTML = '🎧 <strong>Pilih lagu dari playlist</strong>';
+        }
+    }
+
+    function playNext() {
+        if (!playlist.length) return;
+        if (isShuffle) {
+            let rand;
+            do {
+                rand = Math.floor(Math.random() * playlist.length);
+            } while (rand === currentIndex && playlist.length > 1);
+            playIndex(rand);
+        } else {
+            let next = currentIndex + 1;
+            if (next >= playlist.length) {
+                if (isRepeat) next = 0;
+                else {
+                    isPlaying = false;
+                    updateNowPlaying();
+                    render();
+                    return;
+                }
+            }
+            playIndex(next);
+        }
+    }
+
+    function playPrev() {
+        if (!playlist.length) return;
+        let prev = currentIndex - 1;
+        if (prev < 0) {
+            if (isRepeat) prev = playlist.length - 1;
+            else prev = 0;
+        }
+        playIndex(prev);
+    }
+
+    // ============================================================
+    //  EVENT LISTENER
+    // ============================================================
+    audio.addEventListener('ended', () => {
+        if (isRepeat && playlist.length === 1) {
+            audio.currentTime = 0;
+            audio.play();
+        } else {
+            playNext();
+        }
+    });
+
+    audio.addEventListener('loadedmetadata', function () {
+        const dur = formatDuration(this.duration);
+        if (playlist[currentIndex]) {
+            playlist[currentIndex].duration = dur;
+            render();
+        }
+    });
+
+    audio.addEventListener('play', () => {
+        isPlaying = true;
+        updateNowPlaying();
+        render();
+    });
+
+    audio.addEventListener('pause', () => {
+        isPlaying = false;
+        updateNowPlaying();
+        render();
+    });
+
+    audio.addEventListener('error', () => {
+        console.warn('Gagal memuat:', playlist[currentIndex]?.title);
+        // tidak tampilkan alert agar tidak mengganggu user
+    });
+
+    // ============================================================
+    //  TOMBOL
+    // ============================================================
+    prevBtn.addEventListener('click', playPrev);
+    nextBtn.addEventListener('click', playNext);
+
+    shuffleBtn.addEventListener('click', function () {
+        isShuffle = !isShuffle;
+        this.classList.toggle('active-mode');
+        this.innerHTML = isShuffle
+            ? '<span class="btn-icon">🔀</span> Shuffle ON'
+            : '<span class="btn-icon">🔀</span> Shuffle';
+        if (isShuffle) {
+            isRepeat = false;
+            repeatBtn.classList.remove('active-mode');
+            repeatBtn.innerHTML = '<span class="btn-icon">🔁</span> Repeat';
+        }
+    });
+
+    repeatBtn.addEventListener('click', function () {
+        isRepeat = !isRepeat;
+        this.classList.toggle('active-mode');
+        this.innerHTML = isRepeat
+            ? '<span class="btn-icon">🔁</span> Repeat ON'
+            : '<span class="btn-icon">🔁</span> Repeat';
+        if (isRepeat) {
+            isShuffle = false;
+            shuffleBtn.classList.remove('active-mode');
+            shuffleBtn.innerHTML = '<span class="btn-icon">🔀</span> Shuffle';
+        }
+    });
+
+    // ============================================================
+    //  KEYBOARD SHORTCUT
+    // ============================================================
+    document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        if (e.key === ' ') {
+            e.preventDefault();
+            audio.paused ? audio.play() : audio.pause();
+        } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            playNext();
+        } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            playPrev();
+        }
+    });
+
+    // ============================================================
+    //  START
+    // ============================================================
+    loadPlaylist();
+    console.log('🎵 Playlist siap! 14 lagu relaksasi.');
+    console.log('💡 Shortcut: Space (play/pause), ← (prev), → (next)');
+</script>
+</body>
+</html>
